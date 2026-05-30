@@ -1,0 +1,180 @@
+@extends('layouts.app')
+
+@section('title', 'RT.011 - Portal Warga')
+
+@section('content')
+<div class="row g-4">
+    <!-- Header Hero Card -->
+    <div class="col-12">
+        <div class="card card-custom overflow-hidden border-0" style="background: linear-gradient(135deg, var(--primary-color) 0%, #2c5375 100%);">
+            <div class="card-body p-4 p-md-5 text-white">
+                <div class="row align-items-center">
+                    <div class="col-md-8 text-center text-md-start">
+                        <span class="badge bg-light text-primary px-3 py-2 rounded-pill mb-3 fw-bold">Selamat Datang</span>
+                        <h1 class="display-5 fw-bold mb-2">Portal Informasi Warga RT.011</h1>
+                        <p class="lead mb-4 text-white-50">Transparansi Keuangan dan Administrasi Rukun Tetangga 011 / RW 003 Perumahan Karanggintung.</p>
+                        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
+                            <a href="#paymentInfoSection" class="btn btn-secondary-custom px-4 py-2">
+                                <i class="bi bi-search me-2"></i>Cek Status Pembayaran
+                            </a>
+                            @auth
+                                <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-light px-4 py-2">
+                                    <i class="bi bi-speedometer2 me-2"></i>Kembali ke Dashboard
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="btn btn-outline-light px-4 py-2">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login Admin
+                                </a>
+                            @endauth
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-none d-md-block text-center">
+                        <i class="bi bi-wallet2 text-white-50" style="font-size: 8rem; color: var(--secondary-color) !important;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Cards -->
+    <div class="col-md-4">
+        <div class="card card-custom h-100 border-0" style="border-left: 6px solid var(--secondary-color) !important;">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted fw-bold">SALDO KAS RT</span>
+                        <div class="bg-light p-2 rounded-3 text-primary"><i class="bi bi-piggy-bank fs-4" style="color: var(--secondary-color);"></i></div>
+                    </div>
+                    <h2 class="fw-bold mb-1">Rp {{ number_format($saldoKas, 0, ',', '.') }}</h2>
+                    <p class="text-muted small">Awal: Rp {{ number_format($saldoAwalKas, 0, ',', '.') }} | Masuk: Rp {{ number_format($totalKas, 0, ',', '.') }}</p>
+                </div>
+                <div class="border-top pt-2">
+                    <span class="text-danger small"><i class="bi bi-arrow-down-right me-1"></i>Pengeluaran: Rp {{ number_format($totalPengeluaranKas, 0, ',', '.') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-custom h-100 border-0" style="border-left: 6px solid var(--primary-color) !important;">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted fw-bold">SALDO KEAMANAN</span>
+                        <div class="bg-light p-2 rounded-3 text-primary"><i class="bi bi-shield-lock fs-4" style="color: var(--primary-color);"></i></div>
+                    </div>
+                    <h2 class="fw-bold mb-1">Rp {{ number_format($saldoKeamanan, 0, ',', '.') }}</h2>
+                    <p class="text-muted small">Awal: Rp {{ number_format($saldoAwalKeamanan, 0, ',', '.') }} | Masuk: Rp {{ number_format($totalKeamanan, 0, ',', '.') }}</p>
+                </div>
+                <div class="border-top pt-2">
+                    <span class="text-danger small"><i class="bi bi-arrow-down-right me-1"></i>Gaji Satpam: Rp {{ number_format($totalPengeluaranKeamanan, 0, ',', '.') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card-custom h-100 border-0" style="background: linear-gradient(135deg, var(--secondary-color) 0%, #178b86 100%);">
+            <div class="card-body p-4 text-white d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="fw-bold text-white-50">SALDO BERSIH RT</span>
+                        <div class="bg-white bg-opacity-25 p-2 rounded-3"><i class="bi bi-cash-coin fs-4 text-white"></i></div>
+                    </div>
+                    <h2 class="fw-bold mb-1">Rp {{ number_format($saldoBersih, 0, ',', '.') }}</h2>
+                    <p class="text-white-50 small">Gabungan Kas & Keamanan</p>
+                </div>
+                <div class="border-top border-white border-opacity-25 pt-2">
+                    <span class="small"><i class="bi bi-info-circle me-1"></i>Data ter-update per {{ now()->locale('id')->isoFormat('D MMMM YYYY') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Status Checking / Public Table -->
+    <div class="col-12" id="paymentInfoSection">
+        <div class="card card-custom border-0 my-4">
+            <div class="card-header bg-white border-0 pt-4 px-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                    <h4 class="fw-bold mb-1" style="color: var(--primary-color);"><i class="bi bi-credit-card-2-front me-2" style="color: var(--secondary-color);"></i>Status Iuran Warga (Tahun 2026)</h4>
+                    <p class="text-muted mb-0 small">Bulan Berjalan dihitung sejak Januari 2026</p>
+                </div>
+                <!-- Search bar -->
+                <form action="{{ route('public.dashboard') }}#paymentInfoSection" method="GET" class="d-flex gap-2">
+                    <input type="hidden" name="show_info" value="1">
+                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari nama / no rumah..." value="{{ $search }}" style="width: 220px;">
+                    <button type="submit" class="btn btn-secondary-custom btn-sm"><i class="bi bi-search"></i></button>
+                    @if($search)
+                        <a href="{{ route('public.dashboard') }}#paymentInfoSection" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-circle"></i></a>
+                    @endif
+                </form>
+            </div>
+            
+            <div class="card-body px-4 pb-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light text-muted uppercase small">
+                            <tr>
+                                <th>No Rumah</th>
+                                <th>Nama Warga</th>
+                                <th>Kas RT (20rb)</th>
+                                <th>Bulan Kas Dibayar</th>
+                                <th>Keamanan (55rb)</th>
+                                <th>Bulan Keamanan Dibayar</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($paginatedResidents as $warga)
+                                <tr>
+                                    <td class="fw-semibold">{{ $warga->no_rumah }}</td>
+                                    <td>{{ $warga->name }}</td>
+                                    <td>Rp {{ number_format($warga->total_kas, 0, ',', '.') }}</td>
+                                    <td>
+                                        <small class="text-muted d-block text-wrap" style="max-width: 180px;">
+                                            {{ $warga->bulan_kas_list ?: '-' }}
+                                        </small>
+                                    </td>
+                                    <td>Rp {{ number_format($warga->total_keamanan, 0, ',', '.') }}</td>
+                                    <td>
+                                        <small class="text-muted d-block text-wrap" style="max-width: 180px;">
+                                            {{ $warga->bulan_keamanan_list ?: '-' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @if($warga->status_pembayaran === 'LUNAS')
+                                            <span class="badge badge-lunas px-3 py-2 rounded-pill small">LUNAS</span>
+                                        @else
+                                            <span class="badge badge-tunggak px-3 py-2 rounded-pill small">
+                                                TUNGGAKAN {{ $warga->tunggakan }} BLN
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ route('receipt.show', $warga->id) }}" target="_blank" class="btn btn-outline-primary btn-sm rounded-3">
+                                            <i class="bi bi-printer me-1"></i> Kwitansi
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center py-4 text-muted">Data warga tidak ditemukan.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination links -->
+                <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <span class="small text-muted">Menampilkan {{ $paginatedResidents->firstItem() ?? 0 }} sampai {{ $paginatedResidents->lastItem() ?? 0 }} dari {{ $paginatedResidents->total() }} warga</span>
+                    <div>
+                        {{ $paginatedResidents->fragment('paymentInfoSection')->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
