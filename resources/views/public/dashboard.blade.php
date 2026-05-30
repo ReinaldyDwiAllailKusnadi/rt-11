@@ -16,6 +16,68 @@
     .text-warning-light {
         color: #fde68a !important; /* Soft amber/yellow warning */
     }
+
+    .resident-payment-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 14px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    .payment-mobile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.95rem;
+    }
+
+    .payment-mobile-row span {
+        color: #64748b;
+    }
+
+    .payment-mobile-row strong {
+        color: #0f172a;
+        white-space: nowrap;
+    }
+
+    .payment-months {
+        margin-top: 4px;
+        font-size: 0.82rem;
+        color: #64748b;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+
+    @media (max-width: 575.98px) {
+        #paymentInfoSection .card-header {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+
+        #paymentInfoSection .card-body {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+
+        #paymentInfoSection h4 {
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+
+        .resident-payment-card {
+            padding: 14px;
+            border-radius: 14px;
+        }
+
+        .badge-tunggak,
+        .badge-lunas {
+            font-size: 0.68rem;
+            padding: 6px 9px;
+        }
+    }
 </style>
 @endsection
 
@@ -69,76 +131,124 @@
                     <p class="text-muted mb-0 small">Bulan Berjalan dihitung sejak Januari 2026</p>
                 </div>
                 <!-- Search bar -->
-                <form action="{{ route('public.dashboard') }}#paymentInfoSection" method="GET" class="d-flex gap-2 w-100 w-sm-auto mt-2 mt-sm-0">
+                <form action="{{ route('public.dashboard') }}#paymentInfoSection" method="GET" class="d-flex flex-column flex-sm-row gap-2 w-100 w-sm-auto mt-2 mt-sm-0">
                     <input type="hidden" name="show_info" value="1">
-                    <input type="text" name="search" class="form-control form-control-sm flex-grow-1" placeholder="Cari nama / no rumah..." value="{{ $search }}" style="max-width: 220px;">
-                    <button type="submit" class="btn btn-secondary-custom btn-sm"><i class="bi bi-search"></i></button>
-                    @if($search)
-                        <a href="{{ route('public.dashboard') }}#paymentInfoSection" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-circle"></i></a>
-                    @endif
+                    <input type="text" name="search" class="form-control form-control-sm flex-grow-1" placeholder="Cari nama / no rumah..." value="{{ $search }}" style="min-width: 200px;">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="submit" class="btn btn-secondary-custom btn-sm w-100 w-sm-auto"><i class="bi bi-search me-1"></i> Cari</button>
+                        @if($search)
+                            <a href="{{ route('public.dashboard') }}#paymentInfoSection" class="btn btn-outline-secondary btn-sm w-100 w-sm-auto"><i class="bi bi-x-circle me-1"></i> Reset</a>
+                        @endif
+                    </div>
                 </form>
             </div>
             
             <div class="card-body px-4 pb-4">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light text-muted uppercase small">
-                            <tr>
-                                <th>No Rumah</th>
-                                <th>Nama Warga</th>
-                                <th>Kas RT (20rb)</th>
-                                <th>Bulan Kas Dibayar</th>
-                                <th>Keamanan (55rb)</th>
-                                <th>Bulan Keamanan Dibayar</th>
-                                <th>Status</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($paginatedResidents as $warga)
+                <!-- 1. Tampilan Desktop & Tablet Besar -->
+                <div class="d-none d-md-block">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" style="min-width: 900px;">
+                            <thead class="table-light text-muted uppercase small">
                                 <tr>
-                                    <td class="fw-semibold">{{ $warga->no_rumah }}</td>
-                                    <td>{{ $warga->name }}</td>
-                                    <td>Rp {{ number_format($warga->total_kas, 0, ',', '.') }}</td>
-                                    <td>
-                                        <small class="text-muted d-block text-wrap" style="max-width: 180px;">
-                                            {{ $warga->bulan_kas_list ?: '-' }}
-                                        </small>
-                                    </td>
-                                    <td>Rp {{ number_format($warga->total_keamanan, 0, ',', '.') }}</td>
-                                    <td>
-                                        <small class="text-muted d-block text-wrap" style="max-width: 180px;">
-                                            {{ $warga->bulan_keamanan_list ?: '-' }}
-                                        </small>
-                                    </td>
-                                    <td>
-                                        @if($warga->status_pembayaran === 'LUNAS')
-                                            <span class="badge badge-lunas px-3 py-2 rounded-pill small">LUNAS</span>
-                                        @else
-                                            <span class="badge badge-tunggak px-3 py-2 rounded-pill small">
-                                                TUNGGAKAN {{ $warga->tunggakan }} BLN
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ route('receipt.show', $warga->id) }}" target="_blank" class="btn btn-outline-primary btn-sm rounded-3">
-                                            <i class="bi bi-printer me-1"></i> Kwitansi
-                                        </a>
-                                    </td>
+                                    <th>No Rumah</th>
+                                    <th>Nama Warga</th>
+                                    <th>Kas RT (20rb)</th>
+                                    <th>Bulan Kas Dibayar</th>
+                                    <th>Keamanan (55rb)</th>
+                                    <th>Bulan Keamanan Dibayar</th>
+                                    <th>Status</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-4 text-muted">Data warga tidak ditemukan.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @forelse($paginatedResidents as $warga)
+                                    <tr>
+                                        <td class="fw-semibold">{{ $warga->no_rumah }}</td>
+                                        <td>{{ $warga->name }}</td>
+                                        <td>Rp {{ number_format($warga->total_kas, 0, ',', '.') }}</td>
+                                        <td>
+                                            <small class="text-muted d-block text-wrap" style="max-width: 180px; font-size: 0.8rem;">
+                                                {{ $warga->bulan_kas_list ?: '-' }}
+                                            </small>
+                                        </td>
+                                        <td>Rp {{ number_format($warga->total_keamanan, 0, ',', '.') }}</td>
+                                        <td>
+                                            <small class="text-muted d-block text-wrap" style="max-width: 180px; font-size: 0.8rem;">
+                                                {{ $warga->bulan_keamanan_list ?: '-' }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            @if($warga->status_pembayaran === 'LUNAS')
+                                                <span class="badge badge-lunas px-3 py-2 rounded-pill small">LUNAS</span>
+                                            @else
+                                                <span class="badge badge-tunggak px-3 py-2 rounded-pill small">
+                                                    TUNGGAKAN {{ $warga->tunggakan }} BLN
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('receipt.show', $warga->id) }}" target="_blank" class="btn btn-outline-primary btn-sm rounded-3">
+                                                <i class="bi bi-printer me-1"></i> Kwitansi
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4 text-muted">Data warga tidak ditemukan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2. Tampilan Mobile (Card per Warga) -->
+                <div class="d-md-none">
+                    @forelse($paginatedResidents as $warga)
+                        <div class="resident-payment-card">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <div>
+                                    <span class="badge bg-light text-dark border mb-2">{{ $warga->no_rumah }}</span>
+                                    <h6 class="fw-bold mb-0">{{ $warga->name }}</h6>
+                                </div>
+                                @if($warga->status_pembayaran === 'LUNAS')
+                                    <span class="badge badge-lunas rounded-pill">LUNAS</span>
+                                @else
+                                    <span class="badge badge-tunggak rounded-pill text-nowrap">
+                                        TUNGGAKAN {{ $warga->tunggakan }} BLN
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="payment-mobile-row">
+                                <span>Kas RT</span>
+                                <strong>Rp {{ number_format($warga->total_kas, 0, ',', '.') }}</strong>
+                            </div>
+                            <div class="payment-months">
+                                {{ $warga->bulan_kas_list ?: '-' }}
+                            </div>
+
+                            <div class="payment-mobile-row mt-3">
+                                <span>Keamanan</span>
+                                <strong>Rp {{ number_format($warga->total_keamanan, 0, ',', '.') }}</strong>
+                            </div>
+                            <div class="payment-months">
+                                {{ $warga->bulan_keamanan_list ?: '-' }}
+                            </div>
+
+                            <a href="{{ route('receipt.show', $warga->id) }}" target="_blank" class="btn btn-outline-primary btn-sm w-100 mt-3">
+                                <i class="bi bi-printer me-1"></i> Cetak Kwitansi
+                            </a>
+                        </div>
+                    @empty
+                        <div class="text-center py-4 text-muted">Data warga tidak ditemukan.</div>
+                    @endforelse
                 </div>
                 
                 <!-- Pagination links -->
                 <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <span class="small text-muted">Menampilkan {{ $paginatedResidents->firstItem() ?? 0 }} sampai {{ $paginatedResidents->lastItem() ?? 0 }} dari {{ $paginatedResidents->total() }} warga</span>
-                    <div>
+                    <div class="overflow-auto">
                         {{ $paginatedResidents->fragment('paymentInfoSection')->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
