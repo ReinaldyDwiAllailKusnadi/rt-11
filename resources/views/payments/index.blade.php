@@ -83,7 +83,7 @@
                     @endphp
                     @forelse($payments as $p)
                         <tr>
-                            <td>{{ $p->date->format('Y-m-d') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($p->date)->format('Y-m-d') }}</td>
                             <td>
                                 <span class="badge {{ in_array($p->type, ['kas', 'keamanan']) ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger' }} px-2 py-1 rounded-pill small">
                                     {{ $jenisLabels[$p->type] ?? $p->type }}

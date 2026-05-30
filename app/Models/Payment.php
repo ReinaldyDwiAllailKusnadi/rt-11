@@ -18,8 +18,9 @@ class Payment extends Model
     ];
 
     protected $casts = [
+        'date' => 'date',
         'bulan_list' => 'array',
-        'amount' => 'integer'
+        'amount' => 'integer',
     ];
 
     public function resident(): BelongsTo

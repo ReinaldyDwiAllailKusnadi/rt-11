@@ -255,7 +255,7 @@
                                 <p class="mb-0 fw-semibold text-dark small" style="line-height: 1.2;">
                                     {{ $recent->resident ? $recent->resident->name : ($recent->nama_satpam ? $recent->nama_satpam : 'Umum') }}
                                 </p>
-                                <span class="text-muted small" style="font-size: 0.7rem;">{{ $recent->date->format('d/m/Y') }}</span>
+                                <span class="text-muted small" style="font-size: 0.7rem;">{{ \Carbon\Carbon::parse($recent->date)->format('d/m/Y') }}</span>
                             </div>
                             <span class="fw-bold small text-dark">
                                 {{ in_array($recent->type, ['kas', 'keamanan']) ? '+' : '-' }} Rp {{ number_format($recent->amount, 0, ',', '.') }}

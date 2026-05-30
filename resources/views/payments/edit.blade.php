@@ -45,7 +45,7 @@
                         <!-- Date input -->
                         <div class="col-md-6">
                             <label for="date" class="form-label small fw-bold">Tanggal Transaksi</label>
-                            <input type="date" name="date" id="date" class="form-control" value="{{ old('date', $payment->date->format('Y-m-d')) }}" required>
+                            <input type="date" name="date" id="date" class="form-control" value="{{ old('date', \Carbon\Carbon::parse($payment->date)->format('Y-m-d')) }}" required>
                         </div>
 
                         <!-- Keterangan input -->
