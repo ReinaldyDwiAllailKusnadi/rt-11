@@ -19,7 +19,7 @@
     <!-- Filter bar -->
     <div class="card-body px-4 pt-3 pb-1">
         <form action="{{ route('payments.index') }}" method="GET" class="row g-3 align-items-center">
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-md-3">
                 <select name="type" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">-- Semua Kategori --</option>
                     <option value="kas" {{ $type === 'kas' ? 'selected' : '' }}>Kas RT (Iuran)</option>
@@ -31,13 +31,13 @@
                     <option value="lainLAIN" {{ $type === 'lainLAIN' ? 'selected' : '' }}>Lain-lain (Pengeluaran)</option>
                 </select>
             </div>
-            <div class="col-md-5">
+            <div class="col-12 col-sm-6 col-md-5">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
                     <input type="text" name="search" class="form-control" placeholder="Cari nama warga, satpam, keterangan..." value="{{ $search }}">
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-sm-6 col-md-2">
                 <select name="per_page" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10 / hal</option>
                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25 / hal</option>
@@ -45,7 +45,7 @@
                     <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100 / hal</option>
                 </select>
             </div>
-            <div class="col-md-2 d-flex gap-2">
+            <div class="col-6 col-sm-6 col-md-2 d-flex gap-2">
                 <button type="submit" class="btn btn-primary-custom btn-sm w-100"><i class="bi bi-filter"></i> Filter</button>
                 @if($type || $search)
                     <a href="{{ route('payments.index') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-circle"></i></a>

@@ -8,7 +8,6 @@ use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\BackupController;
 use App\Http\Controllers\LetterController;
 use App\Http\Controllers\ReceiptController;
 
@@ -47,12 +46,6 @@ Route::middleware('auth')->group(function () {
     // Excel Reports
     Route::get('/admin/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/admin/reports/export', [ReportController::class, 'exportExcel'])->name('reports.export');
-    
-    // Backup & Restore
-    Route::get('/admin/backup', [BackupController::class, 'index'])->name('backup.index');
-    Route::get('/admin/backup/export', [BackupController::class, 'export'])->name('backup.export');
-    Route::post('/admin/backup/restore', [BackupController::class, 'restore'])->name('backup.restore');
-    
     // Letter Generation
     Route::get('/admin/letters', [LetterController::class, 'index'])->name('letters.index');
     Route::post('/admin/letters/generate', [LetterController::class, 'generate'])->name('letters.generate');

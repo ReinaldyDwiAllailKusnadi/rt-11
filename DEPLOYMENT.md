@@ -148,3 +148,19 @@ Jika setelah deployment v1.0.0 dirilis terjadi kendala kritis pada sistem, ikuti
    ```
 4. **Verifikasi Jalur Aplikasi**:
    Akses kembali halaman publik dan pastikan saldo kas serta data warga tampil normal kembali.
+
+---
+
+## Panduan Backup Database Berkala
+
+Backup database dilakukan melalui fasilitas hosting/phpMyAdmin atau command database server, bukan dari aplikasi. 
+
+### Contoh Backup menggunakan Command (VPS/Server):
+```bash
+mysqldump -u user_db_rt011 -p db_nama_rt011 > backup_database.sql
+```
+
+### Contoh Restore menggunakan Command (VPS/Server):
+```bash
+mysql -u user_db_rt011 -p db_nama_rt011 < backup_database.sql
+```

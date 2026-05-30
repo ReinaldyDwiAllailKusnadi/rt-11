@@ -40,6 +40,37 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
+        @media (max-width: 768px) {
+            body {
+                padding: 10px !important;
+            }
+            .preview-container {
+                padding: 30px 20px !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border-radius: 4px !important;
+            }
+            .control-panel {
+                flex-direction: column !important;
+                gap: 12px !important;
+                align-items: stretch !important;
+                padding: 12px !important;
+            }
+            .control-panel .d-flex {
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+                width: 100% !important;
+                justify-content: stretch !important;
+            }
+            .control-panel .btn, .control-panel form {
+                flex: 1 1 auto !important;
+                width: auto !important;
+            }
+            .control-panel button, .control-panel form button {
+                width: 100% !important;
+            }
+        }
+
         @media print {
             body {
                 background-color: #ffffff !important;

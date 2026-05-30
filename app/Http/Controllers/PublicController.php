@@ -17,16 +17,20 @@ class PublicController extends Controller
 
     public function dashboard(Request $request)
     {
-        $saldoKas = $this->finance->getSaldoKas();
-        $saldoKeamanan = $this->finance->getSaldoKeamanan();
-        $saldoBersih = $this->finance->getSaldoBersih();
-        $saldoAwalKas = $this->finance->getSaldoAwalKas();
-        $saldoAwalKeamanan = $this->finance->getSaldoAwalKeamanan();
-
-        $totalKas = $this->finance->getPemasukanKasTotal();
-        $totalKeamanan = $this->finance->getPemasukanKeamananTotal();
-        $totalPengeluaranKas = $this->finance->getPengeluaranKasTotal();
-        $totalPengeluaranKeamanan = $this->finance->getPengeluaranKeamananTotal();
+        $summary = [
+            'saldo_awal_kas' => $this->finance->getSaldoAwalKas(),
+            'saldo_awal_keamanan' => $this->finance->getSaldoAwalKeamanan(),
+            'kas_rt' => $this->finance->getPemasukanKasTotal(),
+            'keamanan' => $this->finance->getPemasukanKeamananTotal(),
+            'kemalangan' => $this->finance->totalByType('kemalangan'),
+            'sakit' => $this->finance->totalByType('sakit'),
+            'bayar_satpam' => $this->finance->totalByType('bayarSATPAM'),
+            'konsumsi_rapat' => $this->finance->totalByType('konsumsiRAPAT'),
+            'lain_lain' => $this->finance->totalByType('lainLAIN'),
+            'saldo_kas' => $this->finance->getSaldoKas(),
+            'saldo_keamanan' => $this->finance->getSaldoKeamanan(),
+            'saldo_bersih' => $this->finance->getSaldoBersih(),
+        ];
 
         // Fetch paginated residents for public payment info
         $perPage = $request->input('per_page', 10);
@@ -75,8 +79,7 @@ class PublicController extends Controller
         $showInfoModal = $request->has('show_info') || $request->has('page') || $request->has('search');
 
         return view('public.dashboard', compact(
-            'saldoKas', 'saldoKeamanan', 'saldoBersih', 'saldoAwalKas', 'saldoAwalKeamanan',
-            'totalKas', 'totalKeamanan', 'totalPengeluaranKas', 'totalPengeluaranKeamanan',
+            'summary',
             'paginatedResidents', 'showInfoModal', 'search'
         ));
     }

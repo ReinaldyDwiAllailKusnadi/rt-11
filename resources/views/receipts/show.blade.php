@@ -87,6 +87,43 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
+        @media (max-width: 768px) {
+            body {
+                padding: 10px !important;
+            }
+            .receipt-container {
+                padding: 20px !important;
+            }
+            .stamp-lunas, .stamp-tunggak {
+                position: static !important;
+                display: inline-block !important;
+                margin-top: 10px !important;
+                transform: none !important;
+                font-size: 1rem !important;
+            }
+            .receipt-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 15px !important;
+            }
+            .receipt-header .text-end {
+                text-align: left !important;
+            }
+            .info-label {
+                width: 120px !important;
+                min-width: 120px !important;
+            }
+            .control-panel {
+                flex-direction: column !important;
+                gap: 10px !important;
+                align-items: flex-start !important;
+            }
+            .control-panel div {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+        }
+
         @media print {
             body {
                 background-color: #ffffff !important;

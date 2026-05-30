@@ -29,9 +29,7 @@ Aplikasi ini dimigrasikan dari sistem legacy berbasis HTML & localStorage menjad
    - Ekspor Laporan Rekapitulasi Keuangan ke format Excel berisi 4 Sheet (Ringkasan, Rekap Bulanan, Status Warga, Daftar Transaksi).
    - Pembuatan Surat Pengantar Keterangan RT secara dinamis (Surat Pengantar Umum, Domisili, dan Usaha) dengan fitur cetak PDF/kertas langsung serta ekspor ke file Microsoft Word (.docx).
    - Cetak Kwitansi berformat ramah cetak (print-friendly) untuk arsip warga.
-6. **Sistem Backup & Restore**:
-   - Ekspor seluruh database warga dan transaksi ke dalam satu file JSON.
-   - Restore database dari file JSON (mendukung format migrasi dari sistem HTML lama maupun format Laravel baru) dilengkapi dengan validasi struktur data otomatis sebelum impor dieksekusi.
+
 
 ---
 
@@ -127,16 +125,9 @@ php artisan test
 
 ---
 
-## Panduan Backup dan Restore
+## Panduan Backup Database
 
-Fitur ini sangat berguna untuk memindahkan data atau mengamankan laporan bulanan RT:
-1. **Export Backup**:
-   - Masuk ke Dashboard Admin -> **Backup Data**.
-   - Klik tombol **Export Database JSON**. File backup `.json` akan otomatis terunduh ke komputer Anda.
-2. **Restore Backup**:
-   - Masuk ke menu **Backup Data**.
-   - Pilih file `.json` hasil export sebelumnya di input file.
-   - Klik **Restore Database**. Sistem akan memvalidasi integritas data secara otomatis sebelum mengganti data lama Anda.
+Backup database dilakukan melalui fasilitas hosting/phpMyAdmin atau command database server, bukan dari aplikasi. Hal ini untuk menjamin keamanan data dan efisiensi performa server.
 
 ---
 

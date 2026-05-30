@@ -16,20 +16,17 @@ class FinanceService
 
     public function getSaldoAwalKas(): int
     {
-        $setting = Setting::find('saldo_awal_kas');
-        return $setting ? (int)$setting->value : 0;
+        return (int) (Setting::where('key', 'saldo_awal_kas')->value('value') ?? 0);
     }
 
     public function getSaldoAwalKeamanan(): int
     {
-        $setting = Setting::find('saldo_awal_keamanan');
-        return $setting ? (int)$setting->value : 0;
+        return (int) (Setting::where('key', 'saldo_awal_keamanan')->value('value') ?? 0);
     }
 
     public function getNamaKetuaRT(): string
     {
-        $setting = Setting::find('nama_ketua_rt');
-        return $setting ? $setting->value : 'MUHAMMAD NASIKUN';
+        return Setting::where('key', 'nama_ketua_rt')->value('value') ?: 'MUHAMMAD NASIKUN';
     }
 
     public function totalByType(string $type): int

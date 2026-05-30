@@ -27,13 +27,13 @@
     <!-- Filter bar -->
     <div class="card-body px-4 pt-3 pb-1">
         <form action="{{ route('residents.index') }}" method="GET" class="row g-3 align-items-center">
-            <div class="col-md-5">
+            <div class="col-12 col-md-5">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
                     <input type="text" name="search" class="form-control" placeholder="Cari nama warga atau nomor rumah..." value="{{ $search }}">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-md-3">
                 <select name="per_page" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10 Warga / halaman</option>
                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25 Warga / halaman</option>
@@ -41,11 +41,11 @@
                     <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100 Warga / halaman</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-sm-3 col-md-2">
                 <button type="submit" class="btn btn-primary-custom btn-sm w-100"><i class="bi bi-filter me-1"></i>Filter</button>
             </div>
             @if($search)
-                <div class="col-md-2">
+                <div class="col-6 col-sm-3 col-md-2">
                     <a href="{{ route('residents.index') }}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-x-circle me-1"></i>Reset</a>
                 </div>
             @endif

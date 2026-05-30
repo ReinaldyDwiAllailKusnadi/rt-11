@@ -174,6 +174,85 @@
                 border: 1px solid #000 !important;
             }
         }
+
+        /* Financial summary text styles */
+        .text-light-green {
+            color: #a7f3d0 !important; /* Soft green */
+        }
+        .text-success-light {
+            color: #d1fae5 !important; /* Soft green success */
+        }
+        .text-danger-light {
+            color: #fca5a5 !important; /* Soft red danger / pink */
+        }
+        .text-warning-light {
+            color: #fde68a !important; /* Soft amber/yellow warning */
+        }
+
+        /* Desktop content container limit */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1280px !important;
+            }
+        }
+
+        /* Global Responsive Settings */
+        @media (max-width: 575.98px) {
+            body {
+                font-size: 14px;
+            }
+
+            .container,
+            .container-fluid {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .card-custom {
+                border-radius: 16px !important;
+            }
+
+            .navbar-brand {
+                font-size: 1rem;
+                max-width: 220px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .btn {
+                min-height: 42px;
+            }
+
+            .table-responsive {
+                border-radius: 12px;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+                gap: 8px !important;
+            }
+
+            .checkbox-btn {
+                padding: 6px !important;
+                font-size: 0.8rem !important;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .financial-summary-title {
+                font-size: 1.1rem !important;
+            }
+
+            .financial-summary-amount {
+                font-size: 0.95rem !important;
+            }
+
+            .hero-title {
+                font-size: 1.8rem !important;
+                line-height: 1.2 !important;
+            }
+        }
     </style>
     @yield('styles')
 </head>
@@ -223,11 +302,7 @@
                                 <i class="bi bi-file-earmark-spreadsheet me-1"></i> Laporan
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ Route::is('backup.index') ? 'active' : '' }}" href="{{ route('backup.index') }}">
-                                <i class="bi bi-cloud-arrow-up me-1"></i> Backup
-                            </a>
-                        </li>
+
                         <li class="nav-item ms-lg-3">
                             <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                 @csrf

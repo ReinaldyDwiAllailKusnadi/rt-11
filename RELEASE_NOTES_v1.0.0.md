@@ -28,8 +28,7 @@ Pada versi **v1.0.0** ini, seluruh data dan logika bisnis telah dipindahkan ke *
    - Ekspor surat pengantar ke file Word (.docx) dan kwitansi pembayaran ke layout ramah cetak.
 5. **Laporan Rekapitulasi Excel**:
    - Fitur ekspor Excel yang menghasilkan file berformat lengkap dengan 4 sheet terpisah (`Ringkasan`, `Rekap_Bulanan_Warga`, `Status_Warga`, `Daftar_Transaksi`).
-6. **Mekanisme Backup & Restore JSON**:
-   - Kemudahan ekspor seluruh isi database ke file JSON dan impor data kembali jika terjadi migrasi server.
+
 
 ---
 
@@ -39,7 +38,7 @@ Dalam rilis v1.0.0 ini, kami telah melakukan audit mendalam pada seluruh kode pr
 - **Proteksi Admin**: Seluruh halaman dashboard admin, manajemen warga, transaksi, dan surat telah dilindungi di balik middleware autentikasi Laravel.
 - **Proteksi CSRF**: Semua form inputan metode POST, PUT, dan DELETE telah dilengkapi dengan token CSRF untuk menangkal serangan Cross-Site Request Forgery.
 - **Pengamanan Saldo Negatif**: Penambahan filter validasi ketat yang memblokir perubahan atau penghapusan transaksi pemasukan jika tindakan tersebut berpotensi menyebabkan saldo aktif Kas RT atau Keamanan menjadi minus.
-- **Deep Validation Impor Backup**: Restore JSON kini memvalidasi struktur data dan format setiap baris data sebelum melakukan pengosongan database, menghindari kegagalan impor setengah jalan.
+
 - **Dekopling Logika di Blade**: Seluruh perhitungan aritmatika dan penjumlahan iuran telah dipindahkan dari view Blade ke `FinanceService` demi transparansi dan kemudahan pengujian.
 
 ---
@@ -51,7 +50,7 @@ Kami telah menjalankan serangkaian pengujian terotomatisasi (unit & feature test
 - **Total Assersi**: 42 Assertions
 - **Status Akhir**: **PASSED (100% Lolos)**
 
-*Skenario yang diuji meliputi: Autentikasi Admin, Kalkulasi Saldo Awal & Transaksi, Batas Pengeluaran Kas/Keamanan, Validasi Duplikasi Iuran, serta Impor/Ekspor data JSON.*
+*Skenario yang diuji meliputi: Autentikasi Admin, Kalkulasi Saldo Awal & Transaksi, Batas Pengeluaran Kas/Keamanan, serta Validasi Duplikasi Iuran.*
 
 ---
 
@@ -62,4 +61,4 @@ Kami telah menjalankan serangkaian pengujian terotomatisasi (unit & feature test
 2. **Mode Debug**:
    Pastikan variabel `APP_DEBUG` pada file `.env` di server Anda diatur ke `false` agar informasi sistem internal tidak terekspos ke publik jika terjadi kendala jaringan.
 3. **Backup Data**:
-   Selalu lakukan backup database secara berkala melalui menu Backup Data di admin panel.
+   Pencadangan database dilakukan melalui fasilitas hosting/phpMyAdmin atau command database server secara berkala, bukan dari dalam aplikasi.

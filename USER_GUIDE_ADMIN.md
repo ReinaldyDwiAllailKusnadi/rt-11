@@ -14,7 +14,7 @@ Selamat datang di Panduan Penggunaan Halaman Administrator Aplikasi RT.011. Doku
 7. [Mencetak Kwitansi Pembayaran](#7-mencetak-kwitansi-pembayaran)
 8. [Membuat Surat Keterangan Pengantar RT](#8-membuat-surat-keterangan-pengantar-rt)
 9. [Mengunduh Laporan Keuangan ke Excel](#9-mengunduh-laporan-keuangan-ke-excel)
-10. [Mencadangkan (Backup) dan Memulihkan (Restore) Data](#10-mencadangkan-backup-dan-memulihkan-restore-data)
+10. [Informasi Backup Database](#10-informasi-backup-database)
 
 ---
 
@@ -138,12 +138,6 @@ Bendahara dapat mengunduh rekapitulasi data keuangan bulanan untuk keperluan rap
 
 ---
 
-## 10. Mencadangkan (Backup) dan Memulihkan (Restore) Data
+## 10. Informasi Backup Database
 
-Untuk menjaga keamanan database jika komputer pengurus mengalami kerusakan:
-1. Klik menu **Backup Data** di Dashboard Admin.
-2. **Cara Backup**: Klik tombol **Export Database JSON**. File backup bernama `rt011_backup_tanggal_waktu.json` akan terunduh. Simpan file ini di flashdisk atau Google Drive Bendahara secara berkala.
-3. **Cara Restore (Pemulihan)**:
-   - Jika ingin memulihkan data setelah instalasi ulang, masuk ke menu **Backup Data**.
-   - Pada bagian **Restore Data**, klik tombol pilih file dan cari file `.json` cadangan yang disimpan sebelumnya.
-   - Klik **Restore Database**. Sistem akan memeriksa data tersebut terlebih dahulu. Jika cocok, data lama akan ditimpa dengan data cadangan tersebut.
+Pencadangan database dilakukan secara manual oleh administrator sistem melalui fasilitas hosting (cPanel/phpMyAdmin) atau server database secara berkala, bukan dari menu di dalam aplikasi. Hubungi teknisi atau administrator server jika Anda membutuhkan salinan file SQL database RT.011.

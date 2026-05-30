@@ -13,9 +13,26 @@ class ResidentSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Setting::updateOrCreate(['key' => 'saldo_awal_kas'], ['value' => 2500000]);
-        \App\Models\Setting::updateOrCreate(['key' => 'saldo_awal_keamanan'], ['value' => 3000000]);
-        \App\Models\Setting::updateOrCreate(['key' => 'nama_ketua_rt'], ['value' => 'MUHAMMAD NASIKUN']);
+        $saldoKas = \App\Models\Setting::where('key', 'saldo_awal_kas')->first();
+        if (!$saldoKas) {
+            \App\Models\Setting::create(['key' => 'saldo_awal_kas', 'value' => '2500000']);
+        } elseif ($saldoKas->value === null || $saldoKas->value === '') {
+            $saldoKas->update(['value' => '2500000']);
+        }
+
+        $saldoKeamanan = \App\Models\Setting::where('key', 'saldo_awal_keamanan')->first();
+        if (!$saldoKeamanan) {
+            \App\Models\Setting::create(['key' => 'saldo_awal_keamanan', 'value' => '3000000']);
+        } elseif ($saldoKeamanan->value === null || $saldoKeamanan->value === '') {
+            $saldoKeamanan->update(['value' => '3000000']);
+        }
+
+        $namaRT = \App\Models\Setting::where('key', 'nama_ketua_rt')->first();
+        if (!$namaRT) {
+            \App\Models\Setting::create(['key' => 'nama_ketua_rt', 'value' => 'MUHAMMAD NASIKUN']);
+        } elseif ($namaRT->value === null || $namaRT->value === '') {
+            $namaRT->update(['value' => 'MUHAMMAD NASIKUN']);
+        }
 
         $residents = [
             ['name' => 'MATHEUS ALAN SEPTIAN', 'no_rumah' => 'I.1'],

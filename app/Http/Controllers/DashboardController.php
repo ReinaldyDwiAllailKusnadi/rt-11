@@ -18,21 +18,21 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $saldoKas = $this->finance->getSaldoKas();
-        $saldoKeamanan = $this->finance->getSaldoKeamanan();
-        $saldoBersih = $this->finance->getSaldoBersih();
-        $saldoAwalKas = $this->finance->getSaldoAwalKas();
-        $saldoAwalKeamanan = $this->finance->getSaldoAwalKeamanan();
+        $summary = [
+            'saldo_awal_kas' => $this->finance->getSaldoAwalKas(),
+            'saldo_awal_keamanan' => $this->finance->getSaldoAwalKeamanan(),
+            'kas_rt' => $this->finance->getPemasukanKasTotal(),
+            'keamanan' => $this->finance->getPemasukanKeamananTotal(),
+            'kemalangan' => $this->finance->totalByType('kemalangan'),
+            'sakit' => $this->finance->totalByType('sakit'),
+            'bayar_satpam' => $this->finance->totalByType('bayarSATPAM'),
+            'konsumsi_rapat' => $this->finance->totalByType('konsumsiRAPAT'),
+            'lain_lain' => $this->finance->totalByType('lainLAIN'),
+            'saldo_kas' => $this->finance->getSaldoKas(),
+            'saldo_keamanan' => $this->finance->getSaldoKeamanan(),
+            'saldo_bersih' => $this->finance->getSaldoBersih(),
+        ];
 
-        $totalKas = $this->finance->getPemasukanKasTotal();
-        $totalKeamanan = $this->finance->getPemasukanKeamananTotal();
-        $totalPengeluaranKas = $this->finance->getPengeluaranKasTotal();
-        $totalPengeluaranKeamanan = $this->finance->getPengeluaranKeamananTotal();
-        $totalPengeluaranGabungan = $totalPengeluaranKas + $totalPengeluaranKeamanan;
-
-        return view('admin.dashboard', compact(
-            'saldoKas', 'saldoKeamanan', 'saldoBersih', 'saldoAwalKas', 'saldoAwalKeamanan',
-            'totalKas', 'totalKeamanan', 'totalPengeluaranKas', 'totalPengeluaranKeamanan', 'totalPengeluaranGabungan'
-        ));
+        return view('admin.dashboard', compact('summary'));
     }
 }
