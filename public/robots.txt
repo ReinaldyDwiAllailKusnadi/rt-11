@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /login
+Disallow: /receipt
+
+Sitemap: https://karanggintung-rt11.my.id/sitemap.xml

@@ -83,4 +83,21 @@ class PublicController extends Controller
             'paginatedResidents', 'showInfoModal', 'search'
         ));
     }
+
+    public function sitemap()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
+        $xml .= '    <url>' . PHP_EOL;
+        $xml .= '        <loc>' . url('/') . '</loc>' . PHP_EOL;
+        $xml .= '        <lastmod>' . now()->toDateString() . '</lastmod>' . PHP_EOL;
+        $xml .= '        <changefreq>daily</changefreq>' . PHP_EOL;
+        $xml .= '        <priority>1.0</priority>' . PHP_EOL;
+        $xml .= '    </url>' . PHP_EOL;
+        $xml .= '</urlset>';
+
+        return response($xml, 200, [
+            'Content-Type' => 'application/xml',
+        ]);
+    }
 }

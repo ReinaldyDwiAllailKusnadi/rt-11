@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'RT.011 - Portal Warga')
+@section('title', 'RT.011 Karanggintung - Portal Informasi Warga dan Transparansi Keuangan')
+@section('meta_description', 'Portal informasi warga RT.011 Karanggintung untuk melihat ringkasan keuangan, status pembayaran iuran, dan layanan administrasi RT secara transparan.')
+@section('canonical', url('/'))
+@section('robots', 'index, follow')
 
 @section('styles')
 <style>
@@ -92,7 +95,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-8 text-center text-md-start">
                         <span class="badge bg-light text-primary px-3 py-2 rounded-pill mb-3 fw-bold">Selamat Datang</span>
-                        <h1 class="display-5 fw-bold mb-2 hero-title">Portal Informasi Warga RT.011</h1>
+                        <h1 class="display-5 fw-bold mb-2 hero-title">Portal Informasi Warga RT.011 Karanggintung</h1>
                         <p class="lead mb-4 text-white-50">Transparansi Keuangan dan Administrasi Rukun Tetangga 011 / RW 003 Perumahan Karanggintung.</p>
                         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-md-start">
                             <a href="#paymentInfoSection" class="btn btn-secondary-custom px-4 py-2">
@@ -122,12 +125,55 @@
         @include('components.financial-summary', ['summary' => $summary])
     </div>
 
+    <!-- Section: Tentang, Layanan & Transparansi -->
+    <div class="col-12">
+        <div class="card card-custom border-0 p-4">
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="d-flex gap-3 align-items-start">
+                            <div class="p-3 bg-light rounded-3 text-primary">
+                                <i class="bi bi-house-door-fill fs-3" style="color: var(--primary-color);" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h2 class="h5 fw-bold mb-2" style="color: var(--primary-color);">Tentang RT.011 Karanggintung</h2>
+                                <p class="text-muted small mb-0">RT.011 Karanggintung menyediakan portal informasi warga untuk membantu transparansi iuran, laporan kas, keamanan lingkungan, serta layanan administrasi surat pengantar RT secara terintegrasi dan akuntabel.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex gap-3 align-items-start">
+                            <div class="p-3 bg-light rounded-3 text-secondary">
+                                <i class="bi bi-people-fill fs-3" style="color: var(--secondary-color);" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h2 class="h5 fw-bold mb-2" style="color: var(--primary-color);">Layanan Warga & Administrasi</h2>
+                                <p class="text-muted small mb-0">Warga dapat dengan mudah memeriksa status iuran bulanan (Kas RT & Keamanan), mengunduh kwitansi digital sebagai bukti bayar sah, dan melakukan permohonan surat pengantar administrasi RT dengan praktis.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex gap-3 align-items-start">
+                            <div class="p-3 bg-light rounded-3 text-success">
+                                <i class="bi bi-shield-fill-check fs-3" style="color: var(--secondary-color);" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h2 class="h5 fw-bold mb-2" style="color: var(--primary-color);">Transparansi Keuangan RT</h2>
+                                <p class="text-muted small mb-0">Semua riwayat kas, pengeluaran darurat seperti dana sosial warga sakit atau kemalangan, serta biaya operasional satpam dipublikasikan secara real-time demi menjamin keterbukaan informasi publik di lingkungan RT.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Payment Status Checking / Public Table -->
     <div class="col-12" id="paymentInfoSection">
         <div class="card card-custom border-0 my-4">
             <div class="card-header bg-white border-0 pt-4 px-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
-                    <h4 class="fw-bold mb-1" style="color: var(--primary-color);"><i class="bi bi-credit-card-2-front me-2" style="color: var(--secondary-color);"></i>Status Iuran Warga (Tahun 2026)</h4>
+                    <h2 class="fw-bold mb-1 fs-4" style="color: var(--primary-color);"><i class="bi bi-credit-card-2-front me-2" style="color: var(--secondary-color);"></i>Status Iuran Warga</h2>
                     <p class="text-muted mb-0 small">Bulan Berjalan dihitung sejak Januari 2026</p>
                 </div>
                 <!-- Search bar -->
@@ -256,4 +302,16 @@
         </div>
     </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Organization",
+  "name": "RT.011 Karanggintung",
+  "url": "{{ url('/') }}",
+  "description": "Portal informasi warga dan transparansi keuangan RT.011 Karanggintung.",
+  "areaServed": "Karanggintung",
+  "sameAs": []
+}
+</script>
 @endsection

@@ -13,6 +13,7 @@ use App\Http\Controllers\ReceiptController;
 
 // Public routes
 Route::get('/', [PublicController::class, 'dashboard'])->name('public.dashboard');
+Route::get('/sitemap.xml', [PublicController::class, 'sitemap'])->name('public.sitemap');
 Route::get('/receipt/{resident}', [ReceiptController::class, 'show'])->name('receipt.show');
 
 // Auth routes

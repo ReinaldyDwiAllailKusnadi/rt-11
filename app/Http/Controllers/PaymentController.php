@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Payment;
 use App\Models\Resident;
 use App\Services\FinanceService;
@@ -115,23 +116,25 @@ class PaymentController extends Controller
                 return back()->withInput()->with('duplicate_warning', $msg);
             }
 
-            // Create payment
-            $bulanList = [];
-            foreach ($months as $m) {
-                $monthStr = str_pad($m, 2, '0', STR_PAD_LEFT);
-                $bulanList[] = "{$year}-{$monthStr}";
-            }
+            // Create payment inside transaction
+            return DB::transaction(function () use ($request, $residentId, $type, $totalAmount, $months, $year, $bulanNama) {
+                $bulanList = [];
+                foreach ($months as $m) {
+                    $monthStr = str_pad($m, 2, '0', STR_PAD_LEFT);
+                    $bulanList[] = "{$year}-{$monthStr}";
+                }
 
-            Payment::create([
-                'resident_id' => $residentId,
-                'type' => $type,
-                'amount' => $totalAmount,
-                'date' => $request->date,
-                'keterangan' => $request->keterangan ?? ('Bayar iuran ' . ($type === 'kas' ? 'Kas RT' : 'Keamanan') . ' untuk bulan: ' . implode(', ', array_map(fn($m) => $bulanNama[$m-1] . ' ' . $year, $months)) . ' (' . count($months) . ' bulan)'),
-                'bulan_list' => $bulanList
-            ]);
+                Payment::create([
+                    'resident_id' => $residentId,
+                    'type' => $type,
+                    'amount' => $totalAmount,
+                    'date' => $request->date,
+                    'keterangan' => $request->keterangan ?? ('Bayar iuran ' . ($type === 'kas' ? 'Kas RT' : 'Keamanan') . ' untuk bulan: ' . implode(', ', array_map(fn($m) => $bulanNama[$m-1] . ' ' . $year, $months)) . ' (' . count($months) . ' bulan)'),
+                    'bulan_list' => $bulanList
+                ]);
 
-            return redirect()->route('payments.create', ['type' => $type])->with('success', 'Transaksi berhasil disimpan sebesar Rp ' . number_format($totalAmount, 0, ',', '.'));
+                return redirect()->route('payments.create', ['type' => $type])->with('success', 'Transaksi berhasil disimpan sebesar Rp ' . number_format($totalAmount, 0, ',', '.'));
+            });
 
         } else {
             // Expenses or other categories
@@ -146,22 +149,24 @@ class PaymentController extends Controller
 
             $amount = (int)$request->amount;
 
-            // 2. Validate expense limits
-            if (!$this->finance->cekSaldoCukup($type, $amount)) {
-                $source = $type === 'bayarSATPAM' ? 'Dana Keamanan' : 'Dana Kas RT';
-                return back()->withInput()->withErrors(['amount' => "Saldo tidak mencukupi. Pengeluaran {$type} melebihi saldo {$source}."]);
-            }
+            // 2. Validate expense limits inside transaction
+            return DB::transaction(function () use ($request, $type, $amount) {
+                if (!$this->finance->cekSaldoCukup($type, $amount)) {
+                    $source = $type === 'bayarSATPAM' ? 'Dana Keamanan' : 'Dana Kas RT';
+                    return back()->withInput()->withErrors(['amount' => "Saldo tidak mencukupi. Pengeluaran {$type} melebihi saldo {$source}."]);
+                }
 
-            Payment::create([
-                'resident_id' => $request->resident_id,
-                'type' => $type,
-                'amount' => $amount,
-                'date' => $request->date,
-                'nama_satpam' => $request->type === 'bayarSATPAM' ? $request->nama_satpam : null,
-                'keterangan' => $request->keterangan
-            ]);
+                Payment::create([
+                    'resident_id' => $request->resident_id,
+                    'type' => $type,
+                    'amount' => $amount,
+                    'date' => $request->date,
+                    'nama_satpam' => $request->type === 'bayarSATPAM' ? $request->nama_satpam : null,
+                    'keterangan' => $request->keterangan
+                ]);
 
-            return redirect()->route('admin.dashboard')->with('success', 'Transaksi pengeluaran berhasil disimpan.');
+                return redirect()->route('admin.dashboard')->with('success', 'Transaksi pengeluaran berhasil disimpan.');
+            });
         }
     }
 
@@ -184,47 +189,51 @@ class PaymentController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $newAmount = (int)$request->amount;
-        $diff = $newAmount - $payment->amount;
+        return DB::transaction(function () use ($request, $payment) {
+            $newAmount = (int)$request->amount;
+            $diff = $newAmount - $payment->amount;
 
-        // If it's an expense, validate if editing exceeds balance limits
-        if (in_array($payment->type, ['kemalangan', 'sakit', 'bayarSATPAM', 'konsumsiRAPAT', 'lainLAIN'])) {
-            if ($diff > 0 && !$this->finance->cekSaldoCukup($payment->type, $diff)) {
-                return back()->withErrors(['amount' => 'Saldo tidak mencukupi untuk kenaikan jumlah pengeluaran ini.']);
-            }
-        } else {
-            // For income types (kas, keamanan), reduction in income cannot exceed current balance
-            if ($diff < 0) {
-                $currentBalance = $payment->type === 'kas' ? $this->finance->getSaldoKas() : $this->finance->getSaldoKeamanan();
-                if (abs($diff) > $currentBalance) {
-                    return back()->withErrors(['amount' => 'Saldo tidak mencukupi untuk melakukan pengurangan nominal pemasukan ini.']);
+            // If it's an expense, validate if editing exceeds balance limits
+            if (in_array($payment->type, ['kemalangan', 'sakit', 'bayarSATPAM', 'konsumsiRAPAT', 'lainLAIN'])) {
+                if ($diff > 0 && !$this->finance->cekSaldoCukup($payment->type, $diff)) {
+                    return back()->withErrors(['amount' => 'Saldo tidak mencukupi untuk kenaikan jumlah pengeluaran ini.']);
+                }
+            } else {
+                // For income types (kas, keamanan), reduction in income cannot exceed current balance
+                if ($diff < 0) {
+                    $currentBalance = $payment->type === 'kas' ? $this->finance->getSaldoKas() : $this->finance->getSaldoKeamanan();
+                    if (abs($diff) > $currentBalance) {
+                        return back()->withErrors(['amount' => 'Saldo tidak mencukupi untuk melakukan pengurangan nominal pemasukan ini.']);
+                    }
                 }
             }
-        }
 
-        $payment->update([
-            'amount' => $newAmount,
-            'date' => $request->date,
-            'keterangan' => $request->keterangan,
-        ]);
+            $payment->update([
+                'amount' => $newAmount,
+                'date' => $request->date,
+                'keterangan' => $request->keterangan,
+            ]);
 
-        return redirect()->route('payments.index', ['type' => $payment->type])->with('success', 'Transaksi berhasil diupdate.');
+            return redirect()->route('payments.index', ['type' => $payment->type])->with('success', 'Transaksi berhasil diupdate.');
+        });
     }
 
     public function destroy(Payment $payment)
     {
         $type = $payment->type;
 
-        // Verify if deleting income type leads to negative balance
-        if (in_array($type, ['kas', 'keamanan'])) {
-            $currentBalance = $type === 'kas' ? $this->finance->getSaldoKas() : $this->finance->getSaldoKeamanan();
-            if ($payment->amount > $currentBalance) {
-                return back()->with('error', 'Transaksi tidak bisa dihapus karena saldo akan menjadi minus.');
+        return DB::transaction(function () use ($payment, $type) {
+            // Verify if deleting income type leads to negative balance
+            if (in_array($type, ['kas', 'keamanan'])) {
+                $currentBalance = $type === 'kas' ? $this->finance->getSaldoKas() : $this->finance->getSaldoKeamanan();
+                if ($payment->amount > $currentBalance) {
+                    return back()->with('error', 'Transaksi tidak bisa dihapus karena saldo akan menjadi minus.');
+                }
             }
-        }
 
-        $payment->delete();
-        return redirect()->route('payments.index', ['type' => $type])->with('success', 'Transaksi berhasil dihapus.');
+            $payment->delete();
+            return redirect()->route('payments.index', ['type' => $type])->with('success', 'Transaksi berhasil dihapus.');
+        });
     }
 
     public function statusBayar()

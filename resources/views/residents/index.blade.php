@@ -69,7 +69,15 @@
                             <td class="fw-semibold">{{ $warga->no_rumah }}</td>
                             <td>{{ $warga->name }}</td>
                             <td class="text-center">
-                                <button type="button" class="btn btn-outline-secondary btn-sm me-1 rounded-3" data-bs-toggle="modal" data-bs-target="#editResidentModal{{ $warga->id }}">
+                                <button 
+                                    type="button" 
+                                    class="btn btn-outline-secondary btn-sm me-1 rounded-3 btn-edit-resident" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editResidentModal"
+                                    data-id="{{ $warga->id }}"
+                                    data-name="{{ e($warga->name) }}"
+                                    data-no-rumah="{{ e($warga->no_rumah) }}"
+                                    data-update-url="{{ route('residents.update', $warga->id) }}">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </button>
                                 <form action="{{ route('residents.destroy', $warga->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus warga ini? Semua transaksi terkait akan ikut terhapus!');">
@@ -81,36 +89,6 @@
                                 </form>
                             </td>
                         </tr>
-
-                        <!-- Edit Modal for this specific resident -->
-                        <div class="modal fade" id="editResidentModal{{ $warga->id }}" tabindex="-1" aria-labelledby="editResidentLabel{{ $warga->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content" style="border-radius: 16px;">
-                                    <div class="modal-header border-0 pb-0">
-                                        <h5 class="modal-title fw-bold" id="editResidentLabel{{ $warga->id }}">Edit Data Warga</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <form action="{{ route('residents.update', $warga->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-body py-3">
-                                            <div class="mb-3">
-                                                <label for="no_rumah{{ $warga->id }}" class="form-label small fw-bold">Nomor Rumah</label>
-                                                <input type="text" name="no_rumah" id="no_rumah{{ $warga->id }}" class="form-control" placeholder="Contoh: J. 19 atau J19" value="{{ old('no_rumah', $warga->no_rumah) }}" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="name{{ $warga->id }}" class="form-label small fw-bold">Nama Warga</label>
-                                                <input type="text" name="name" id="name{{ $warga->id }}" class="form-control" placeholder="Nama Lengkap" value="{{ old('name', $warga->name) }}" required>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer border-0 pt-0">
-                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-primary-custom btn-sm">Update Data</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
                     @empty
                         <tr>
                             <td colspan="3" class="text-center py-4 text-muted">Data warga tidak ditemukan.</td>
@@ -158,4 +136,81 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Resident Modal -->
+<div class="modal fade" id="editResidentModal" tabindex="-1" aria-labelledby="editResidentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="editResidentForm" method="POST" class="modal-content" style="border-radius: 16px;">
+            @csrf
+            @method('PUT')
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="editResidentModalLabel">Edit Data Warga</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body py-3">
+                <div class="mb-3">
+                    <label for="edit_no_rumah" class="form-label small fw-bold">Nomor Rumah</label>
+                    <input type="text" name="no_rumah" id="edit_no_rumah" class="form-control" placeholder="Contoh: J. 19 atau J19" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit_name" class="form-label small fw-bold">Nama Warga</label>
+                    <input type="text" name="name" id="edit_name" class="form-control" placeholder="Nama Lengkap" required>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary-custom btn-sm">Update Data</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
+
+@section('styles')
+<style>
+.modal {
+    pointer-events: auto;
+}
+.modal-dialog,
+.modal-content,
+.modal input,
+.modal button {
+    pointer-events: auto;
+}
+</style>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const editModal = document.getElementById('editResidentModal');
+
+    if (editModal) {
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            if (!button) return;
+
+            const name = button.getAttribute('data-name') || '';
+            const noRumah = button.getAttribute('data-no-rumah') || '';
+            const updateUrl = button.getAttribute('data-update-url') || '';
+
+            const form = document.getElementById('editResidentForm');
+            const nameInput = document.getElementById('edit_name');
+            const noRumahInput = document.getElementById('edit_no_rumah');
+
+            form.setAttribute('action', updateUrl);
+            nameInput.value = name;
+            noRumahInput.value = noRumah;
+        });
+
+        editModal.addEventListener('shown.bs.modal', function () {
+            const noRumahInput = document.getElementById('edit_no_rumah');
+            if (noRumahInput) {
+                noRumahInput.focus();
+                noRumahInput.select();
+            }
+        });
+    }
+});
+</script>
 @endsection

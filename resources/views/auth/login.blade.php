@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Login Admin - RT.011')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <div class="row justify-content-center align-items-center py-5">

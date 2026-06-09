@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Admin Dashboard - RT.011')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <div class="row g-4">

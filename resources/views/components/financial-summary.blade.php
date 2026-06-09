@@ -19,9 +19,9 @@
 <div class="card card-custom border-0 text-white animate__animated animate__fadeIn" style="background: linear-gradient(135deg, var(--secondary-color) 0%, #178b86 100%);">
     <div class="card-body p-4 p-md-5">
         <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
-            <h4 class="fw-bold mb-0 d-flex align-items-center financial-summary-title">
+            <h2 class="fw-bold mb-0 d-flex align-items-center financial-summary-title fs-4">
                 <i class="bi bi-bar-chart-line-fill me-2" style="color: #fff;"></i> 📊 Ringkasan Keuangan RT.011
-            </h4>
+            </h2>
             <span class="badge px-3 py-2 rounded-pill small" style="background: rgba(255, 255, 255, 0.15) !important; color: #ffffff !important; white-space: normal; text-align: left;">
                 <i class="bi bi-clock me-1"></i> Update: {{ now()->locale('id')->isoFormat('D MMMM YYYY') }}
             </span>

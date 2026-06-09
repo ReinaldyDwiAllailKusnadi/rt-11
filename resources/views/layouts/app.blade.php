@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Manajemen RT.011')</title>
+    <title>@yield('title', 'RT.011 Karanggintung - Portal Informasi Warga')</title>
+    <meta name="description" content="@yield('meta_description', 'Portal resmi RT.011 Karanggintung untuk informasi warga, transparansi keuangan, status iuran, surat RT, kwitansi, dan layanan administrasi warga.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'RT.011 Karanggintung, RT 011, Karanggintung, iuran RT, kas RT, administrasi RT, portal warga, laporan keuangan RT')">
+    <meta name="author" content="RT.011 Karanggintung">
+    <meta name="robots" content="@yield('robots', 'index, follow')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title', 'RT.011 Karanggintung - Portal Informasi Warga')))">
+    <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('meta_description', 'Portal resmi RT.011 Karanggintung untuk informasi warga dan transparansi keuangan RT.')))">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    <meta property="og:site_name" content="RT.011 Karanggintung">
+    <meta property="og:image" content="{{ asset('images/og-rt011.png') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('og_title', trim($__env->yieldContent('title', 'RT.011 Karanggintung - Portal Informasi Warga')))">
+    <meta name="twitter:description" content="@yield('og_description', trim($__env->yieldContent('meta_description', 'Portal resmi RT.011 Karanggintung.')))">
+    <meta name="twitter:image" content="{{ asset('images/og-rt011.png') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <!-- theme-color -->
+    <meta name="theme-color" content="#1b3a53">
+
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS CDN -->
