@@ -16,6 +16,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 // HELPER TRAIT FOR STYLING
 trait ExportStylingHelper
@@ -686,11 +687,18 @@ class DaftarTransaksiSheet implements FromArray, WithTitle, WithColumnWidths, Wi
                 $valAmount = -$valAmount;
             }
 
-            $dateStr = $p->date instanceof \Carbon\Carbon ? $p->date->format('Y-m-d') : (string)$p->date;
+            $dateVal = null;
+            if ($p->date) {
+                if ($p->date instanceof \Carbon\Carbon) {
+                    $dateVal = Date::PHPToExcel($p->date);
+                } else {
+                    $dateVal = Date::stringToExcel((string)$p->date);
+                }
+            }
 
             $transaksiData[] = [
                 $no++,
-                $dateStr,
+                $dateVal,
                 $label,
                 $nama,
                 $noRumah,
